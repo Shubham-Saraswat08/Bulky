@@ -1,4 +1,4 @@
-using BulkyWebRazor_Temp.Data;
+using BulkyBookWebRazor_Temp.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,9 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 
-builder.Services.AddDbContext<BulkyRazorDbContext>(options =>
+builder.Services.AddDbContext<BulkyBookRazorDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BulkyRazorDefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BulkyBookRazorDefaultConnection"));
 });
 
 var app = builder.Build();

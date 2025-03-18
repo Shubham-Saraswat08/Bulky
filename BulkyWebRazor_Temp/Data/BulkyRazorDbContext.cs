@@ -1,11 +1,11 @@
-﻿using BulkyWebRazor_Temp.Models;
+﻿using BulkyBookWebRazor_Temp.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BulkyWebRazor_Temp.Data
+namespace BulkyBookWebRazor_Temp.Data
 {
-    public class BulkyRazorDbContext : DbContext
+    public class BulkyBookRazorDbContext : DbContext
     {
-        public BulkyRazorDbContext(DbContextOptions<BulkyRazorDbContext> options) : base(options)
+        public BulkyBookRazorDbContext(DbContextOptions<BulkyBookRazorDbContext> options) : base(options)
         {
         }
 

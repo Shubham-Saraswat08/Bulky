@@ -1,9 +1,9 @@
-﻿using Bulky.DataAccess.Data;
-using Bulky.Models;
-using BulkyWeb.Repository.IRepository;
+﻿using BulkyBook.DataAccess.Data;
+using BulkyBook.Models;
+using BulkyBookWeb.Repository.IRepository;
 using System.Linq.Expressions;
 
-namespace BulkyWeb.Repository
+namespace BulkyBookWeb.Repository
 {
     public class CategoryRepository : Repository<Category>, ICategoryRepository
     {

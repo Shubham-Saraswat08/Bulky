@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace BulkyWeb.Repository.IRepository
+namespace BulkyBookWeb.Repository.IRepository
 {
     public interface IRepository<T> where T : class
     {

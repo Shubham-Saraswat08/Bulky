@@ -1,8 +1,10 @@
-﻿namespace BulkyWeb.Repository.IRepository
+﻿namespace BulkyBookWeb.Repository.IRepository
 {
     public interface IUnitOfWork
     {
-        public CategoryRepository category { get;}
+        ICategoryRepository categoryRepository { get; }
+
+        IProductRepository productRepository { get; }
         void Save();
     }
 }

@@ -1,6 +1,6 @@
-using Bulky.DataAccess.Data;
-using BulkyWeb.Repository;
-using BulkyWeb.Repository.IRepository;
+using BulkyBook.DataAccess.Data;
+using BulkyBookWeb.Repository;
+using BulkyBookWeb.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,10 +10,11 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<BulkyWebDbContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("BulkyWebDefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("BulkyBookWebDefaultConnection"));
 });
 
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+//builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
@@ -34,6 +35,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{area=Customer}/{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
