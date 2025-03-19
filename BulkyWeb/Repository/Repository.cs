@@ -15,21 +15,36 @@ namespace BulkyBookWeb.Repository
         {
             this.dbContext = dbContext;
             this.dbset = dbContext.Set<T>();
+            dbContext.Products.Include(u => u.Category);
         }
         public void Add(T entity)
         {
             dbset.Add(entity);
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeProperties = null)
         {
             IQueryable<T> query = dbset;
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach(var item in includeProperties.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(item);
+                }
+            }
             return query.ToList();
         }
 
-        public T? GetValue(Expression<Func<T, bool>> filter)
+        public T? GetValue(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = dbset;
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var item in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(item);
+                }
+            }
             return query.FirstOrDefault(filter);
         }
 
