@@ -2,9 +2,11 @@
 using BulkyBook.Models.ViewModels;
 using BulkyBookWeb.Repository;
 using BulkyBookWeb.Repository.IRepository;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
+using System.Text.RegularExpressions;
 
 namespace BulkyBookWeb.Areas.Admin.Controllers
 {
@@ -80,18 +82,27 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
 
                     productVM.Product.ImageUrl = @"\images\product\" + fileName;
                 }
+                else
+                {
+                    productVM.Product.ImageUrl = @"\images\product\" + "NoImage.jpg";
+                }
+
+                    string description = productVM.Product.Description;
+                string cleanString = Regex.Replace(description, "<.*?>", string.Empty);
+                productVM.Product.Description = cleanString;
 
                 if (productVM.Product.ID == 0)
                 {
                     _UnitOfWork.productRepository.Add(productVM.Product);
+                    TempData["Success"] = "Product Created Successfully";
                 }
                 else
                 {
                     _UnitOfWork.productRepository.Update(productVM.Product);
+                    TempData["Success"] = "Product Updated Successfully";
                 }
 
                 _UnitOfWork.Save();
-                TempData["Success"] = "Product Created Successfully";
                 return RedirectToAction("Index");
             }
             else
@@ -105,25 +116,25 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
-        {
-            var obj = _UnitOfWork.productRepository.GetValue(u => u.ID == id);
+        //public IActionResult Delete(int? id)
+        //{
+        //    var obj = _UnitOfWork.productRepository.GetValue(u => u.ID == id);
 
-            if (obj == null)
-            {
-                return NotFound();
-            }
-            return View(obj);
-        }
-        [HttpPost]
-        public IActionResult Delete(Product obj)
-        {
-            _UnitOfWork.productRepository.Remove(obj);
-            _UnitOfWork.Save();
-            TempData["success"] = "Product Deleted Successfully";
-            return RedirectToAction("Index");
+        //    if (obj == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    return View(obj);
+        //}
+        //[HttpPost]
+        //public IActionResult Delete(Product obj)
+        //{
+        //    _UnitOfWork.productRepository.Remove(obj);
+        //    _UnitOfWork.Save();
+        //    TempData["success"] = "Product Deleted Successfully";
+        //    return RedirectToAction("Index");
 
-        }
+        //}
 
         //public IActionResult Edit(int? id)
         //{
@@ -154,6 +165,30 @@ namespace BulkyBookWeb.Areas.Admin.Controllers
         {
             var objProductList = _UnitOfWork.productRepository.GetAll(includeProperties: "Category").ToList();
             return Json(new { data = objProductList });
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int? id)
+        {
+            var productToBeDeleted = _UnitOfWork.productRepository.GetValue(u => u.ID == id);
+
+            if (productToBeDeleted == null)
+            {
+                return Json(new { success = false, message = "Error While Deleting" });
+            }
+
+            if (productToBeDeleted.ImageUrl.Contains("NoImage.jpg") == false)
+            {
+                var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, productToBeDeleted.ImageUrl.TrimStart('\\'));
+
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+            _UnitOfWork.productRepository.Remove(productToBeDeleted);
+            _UnitOfWork.Save();
+            return Json(new { success = true, message = "Deleted Successfully" });
         }
         #endregion
     }
