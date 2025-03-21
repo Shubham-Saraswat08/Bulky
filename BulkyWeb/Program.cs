@@ -3,6 +3,8 @@ using BulkyBookWeb.Repository;
 using BulkyBookWeb.Repository.IRepository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using BulkyBook.Utility;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,10 +16,18 @@ builder.Services.AddDbContext<BulkyWebDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BulkyBookWebDefaultConnection"));
 });
 
-builder.Services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<BulkyWebDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BulkyWebDbContext>().AddDefaultTokenProviders();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
+});
+
 builder.Services.AddRazorPages();
 //builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
