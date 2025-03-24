@@ -1,11 +1,16 @@
-﻿@model Product
-<form method="post">
-    <div class="card shadow border-0 my-4">
+﻿@model DetailVM
+    <form method="post">
+<div class="card shadow border-0 my-4">
         <div class="card-header bg-secondary bg-gradient text-light py-4">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h3 class="text-white text-uppercase">@Model.Title</h3>
-                    <p class="text-white-50 fw-semibold mb-0">by @Model.Author</p>
+                    <input asp-for="@Model.AddToCart.UserID" hidden/>
+                    <input asp-for="@Model.AddToCart.productID" hidden/>
+                    <input asp-for="@Model.Product.ID" hidden/>
+                    <h3 class="text-white text-uppercase">@Model.Product.Title</h3>
+                    <input asp-for="@Model.Product.Title" hidden/>
+                    <p class="text-white-50 fw-semibold mb-0">by @Model.Product.Author</p>
+                    <input asp-for="@Model.Product.Author" hidden/>
                 </div>
             </div>
         </div>
@@ -20,22 +25,27 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                        <img src="@Model.ImageUrl" width="100%" class="rounded" />
+                        <img src="@Model.Product.ImageUrl" width="100%" class="rounded" />
+                        <input asp-for="@Model.Product.ImageUrl" hidden />
                     </div>
                     <div class="col-12 col-lg-6 offset-lg-1">
 
                         <div class="col-12 col-md-6 pb-4">
-                            <span class="badge">@Model.Category.Name</span>
+                            <span class="badge">@Model.Product.Category.Name</span>
+                            <input asp-for="@Model.Product.Category.Name" hidden />
+                            <input asp-for="@Model.Product.CategoryID" hidden />
                         </div>
                         <div class="row ps-2">
-                            <h6 class="text-dark text-opacity-50 ">ISBN : @Model.ISBN</h6>
+                            <h6 class="text-dark text-opacity-50 ">ISBN : @Model.Product.ISBN</h6>
+                            <input asp-for="@Model.Product.ISBN" hidden />
                         </div>
                         <div class="row ps-2">
                             <h6 class="text-dark text-opacity-50  pb-2">
                                 List Price:
                                 <span class="text-decoration-line-through">
-                                    @Model.ListPrice
+                                    @Model.Product.ListPrice
                                 </span>
+                                <input asp-for="@Model.Product.ListPrice" hidden />
                             </h6>
                         </div>
                         <div class="row text-center ps-2">
@@ -54,20 +64,25 @@
                         </div>
                         <div class="row text-center ps-2">
                             <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                <div>@Model.ListPrice.ToString("C", new System.Globalization.CultureInfo("en-US"))</div>
+                                <div>@Model.Product.ListPrice.ToString("C", new System.Globalization.CultureInfo("en-US"))</div>
+                                <input asp-for="@Model.Product.ListPrice" hidden />
                             </div>
                             <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                <div>@Model.Price.ToString("C", new System.Globalization.CultureInfo("en-US"))</div>
+                                <div>@Model.Product.Price.ToString("C", new System.Globalization.CultureInfo("en-US"))</div>
+                                <input asp-for="@Model.Product.Price" hidden />
                             </div>
                             <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                <div>@Model.Price50.ToString("C", new System.Globalization.CultureInfo("en-US"))</div>
+                                <div>@Model.Product.Price50.ToString("C", new System.Globalization.CultureInfo("en-US"))</div>
+                                <input asp-for="@Model.Product.Price50" hidden />
                             </div>
                             <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                <div>@Model.Price100.ToString("C", new System.Globalization.CultureInfo("en-US"))</div>
+                                <div>@Model.Product.Price100.ToString("C", new System.Globalization.CultureInfo("en-US"))</div>
+                                <input asp-for="@Model.Product.Price100" hidden />
                             </div>
                         </div>
                         <div class="row pl-2 my-3">
-                            <p class="text-secondary lh-sm">@Model.Description</p>
+                            <p class="text-secondary lh-sm">@Model.Product.Description</p>
+                            <input asp-for="@Model.Product.Description" hidden />
                         </div>
                         <div class="row pl-2 mb-3">
                             <div class="col-md-4">
@@ -76,26 +91,23 @@
                                           id="inputGroup-sizing-default">
                                         Count
                                     </span>
-                                    <input type="number" value="1" class="form-control text-end"
+                                    <input asp-for="@Model.AddToCart.Count" type="number" class="form-control text-end"
                                            aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
-
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 pb-1">
-                                <form method="post">
-                                    <button asp-controller="Home" asp-action="AddToCart" type="submit"
-                                            class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
-                                        Add to Cart (Comming Soon...)
-                                    </button>
-                                </form>
+                                <button asp-controller="Home" asp-action="Details" type="submit"
+                                        class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold form-control">
+                                    Add to Cart
+                                </button>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+</div>
+    </form>

@@ -1,71 +1,81 @@
-﻿<div class="card">
+﻿@model IEnumerable<AddToCartModel>;
+@{
+    double totalPrice = 0;
+}
+
+<div class="card">
     <div class="row">
         <div class="col-md-8 cart">
             <div class="title">
                 <div class="row">
                     <div class="col"><h4><b>Shopping Cart</b></h4></div>
-                    <div class="col align-self-center text-right text-muted">3 items</div>
+                    <div class="col text-end text-right text-muted fs-5">@Model.Count() items</div>
                 </div>
             </div>
-            <div class="row border-top border-bottom">
-                <div class="row main align-items-center">
-                    <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/1GrakTl.jpg"></div>
-                    <div class="col">
-                        <div class="row text-muted">Shirt</div>
-                        <div class="row">Cotton T-shirt</div>
+            @if(Model.Count() == 0)
+            {
+                <div class="row border-top border-bottom text-center">
+                    <div class="col-12 mt-5">
+                        <div class="p-5 m-5 text-center">
+                            <span>No Item Available In The Cart</span>
+                        </div>
                     </div>
-                    <div class="col">
-                        <a href="#">-</a><a href="#" class="border">1</a><a href="#">+</a>
-                    </div>
-                    <div class="col">&euro; 44.00 <span class="close">&#10005;</span></div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="row main align-items-center">
-                    <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/ba3tvGm.jpg"></div>
-                    <div class="col">
-                        <div class="row text-muted">Shirt</div>
-                        <div class="row">Cotton T-shirt</div>
+            }
+            @foreach (var item in Model)
+            {
+                <div class="row border-top border-bottom text-center">
+                    <div class="row main align-items-center">
+                        <div class="col-2"><img class="img-fluid" src="@item.Product.ImageUrl"></div>
+                        <div class="col">
+                            <div class="row text-muted">@item.Product.Title</div>
+                            <div class="row">@item.Product.Author</div>
+                        </div>
+                        <div class="col">
+                            <span class="border">@item.Count</span>
+                        </div>
+                        <div class="col">
+                            &#36; @(
+                        item.Count > 100 ? item.Product.Price100 :
+                        (item.Count <= 100 && item.Count > 50) ? item.Product.Price50 :
+                        item.Product.Price
+                        )
+                            <span class="p-2">
+                                <a asp-controller="Home" asp-action="Delete" asp-route-id="@item.id" class="btn-primary p-2">&#10005;</a>
+                            </span>
+                        </div>
                     </div>
-                    <div class="col">
-                        <a href="#">-</a><a href="#" class="border">1</a><a href="#">+</a>
-                    </div>
-                    <div class="col">&euro; 44.00 <span class="close">&#10005;</span></div>
                 </div>
+                totalPrice += (item.Count > 100 ? item.Product.Price100 : (item.Count <= 100 && item.Count > 50) ? item.Product.Price50 : item.Product.Price) * item.Count;
+            }
+            <div class="back-to-shop">
+                <a asp-controller="Home" asp-action="Index">
+                    <span>&leftarrow;</span>
+                    <span class="text-muted">Back to shop</span>
+                </a>
             </div>
-            <div class="row border-top border-bottom">
-                <div class="row main align-items-center">
-                    <div class="col-2"><img class="img-fluid" src="https://i.imgur.com/pHQ3xT3.jpg"></div>
-                    <div class="col">
-                        <div class="row text-muted">Shirt</div>
-                        <div class="row">Cotton T-shirt</div>
-                    </div>
-                    <div class="col">
-                        <a href="#">-</a><a href="#" class="border">1</a><a href="#">+</a>
-                    </div>
-                    <div class="col">&euro; 44.00 <span class="close">&#10005;</span></div>
-                </div>
-            </div>
-            <div class="back-to-shop"><a href="#">&leftarrow;</a><span class="text-muted">Back to shop</span></div>
         </div>
         <div class="col-md-4 summary">
             <div><h5><b>Summary</b></h5></div>
             <hr>
             <div class="row">
-                <div class="col" style="padding-left:0;">ITEMS 3</div>
-                <div class="col text-right">&euro; 132.00</div>
+                <div class="col" style="padding-left:0;">ITEMS @Model.Count()</div>
+                <div class="col text-right">&#36; @totalPrice</div>
             </div>
             <form>
                 <p>SHIPPING</p>
-                <select><option class="text-muted">Standard-Delivery- &euro;5.00</option></select>
+                <select><option class="text-muted">Standard-Delivery- &#36;5.00</option></select>
                 <p>GIVE CODE</p>
                 <input id="code" placeholder="Enter your code">
             </form>
+            @{
+                totalPrice += 5;
+            }
             <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
                 <div class="col">TOTAL PRICE</div>
-                <div class="col text-right">&euro; 137.00</div>
+                <div class="col text-right">&#36; @totalPrice</div>
             </div>
-            <button class="btn">CHECKOUT</button>
+            <button class="btn btn-primary">CHECKOUT</button>
         </div>
     </div>
 </div>

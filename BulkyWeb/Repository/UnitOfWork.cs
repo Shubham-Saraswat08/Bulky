@@ -12,14 +12,15 @@ namespace BulkyBookWeb.Repository
 
         public IProductRepository productRepository { get; private set; }
 
+        public IAddToCart AddToCart { get; set; }
+
         public UnitOfWork(BulkyWebDbContext dbContext)
         {
             this.dbContext = dbContext;
             categoryRepository = new CategoryRepository(dbContext);
             productRepository = new ProductRepository(dbContext);
+            AddToCart = new AddToCart(dbContext);
         }
-
-
 
         public void Save()
         {
